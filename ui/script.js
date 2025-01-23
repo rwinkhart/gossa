@@ -22,7 +22,6 @@ const videoHolder = document.getElementById('videoHolder')
 const manualUpload = document.getElementById('clickupload')
 const pdf = document.getElementById('pdf')
 const help = document.getElementById('help')
-const sums = document.getElementById('sums')
 const okBadge = document.getElementById('ok')
 const sadBadge = document.getElementById('sad')
 const pageTitle = document.head.querySelector('title')
@@ -651,23 +650,6 @@ function pdfOff () {
 }
 
 // sums
-const isSumsMode = () => sums.style.display === 'block'
-
-const sumsToggle = () => isSumsMode() ? sumsOff() : sumsOn()
-
-function sumsOn () {
-  sums.style.display = 'block'
-  table.style.display = 'none'
-}
-
-window.sumsOff = sumsOff
-function sumsOff () {
-  if (!isSumsMode()) return
-  sums.style.display = 'none'
-  table.style.display = 'table'
-  return true
-}
-
 function getSum (type) {
     const a = getASelected()
     sumCall(a.innerText, type)
@@ -822,7 +804,6 @@ document.body.addEventListener('keydown', e => {
           return prevent(e) || isRo() || getSum('sha512')
 
         case 'Digit5':
-          //return prevent(e) || isRo() || sumsToggle()
           return prevent(e) || isRo() || getSum('md5')
 
         case 'Enter':
