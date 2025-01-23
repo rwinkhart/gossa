@@ -246,7 +246,18 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		err = os.RemoveAll(enforcePath(rpc.Args[0]))
 	case "sum":
 		var file *os.File
-		file, err = os.Open(enforcePath(rpc.Args[0]))
+		if strings.HasSuffix(rpc.Args[0], "/../") {
+			w.Write([]byte("cannot checksum a directory"))
+			return
+		}
+		enforcedPath := enforcePath(rpc.Args[0])
+		fileInfo, err := os.Lstat(enforcedPath)
+		check(err)
+		if fileInfo.IsDir() {
+			w.Write([]byte("cannot checksum a directory"))
+			return
+		}
+		file, err = os.Open(enforcedPath)
 		var hash hash.Hash
 		switch rpc.Args[1] {
 		case "md5":
@@ -263,7 +274,7 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		checksum := hash.Sum(nil)
 		checksumHex := make([]byte, hex.EncodedLen(len(checksum)))
 		hex.Encode(checksumHex, checksum)
-		w.Write(append([]byte(rpc.Args[1]+"sum:\n\n"), checksumHex...))
+		w.Write(append([]byte(rpc.Args[1]+"sum:\n"), checksumHex...))
 		return
 	}
 
