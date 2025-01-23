@@ -38,6 +38,13 @@
         <tr><td>any other letter</td><td>fuzzy search</td></tr>
     </tbody></table></div>
 
+    <div onclick="window.sumsOff()" style="display: none;" id="sums"><table id="sumsTable"><tbody>
+        <tr><td><button onclick="getMD5Sum()">MD5</button></td></tr>
+        <tr><td><button onclick="getSHA1Sum()">SHA1</button></td></tr>
+        <tr><td><button onclick="getSHA256Sum()">SHA256</button></td></tr>
+        <tr><td><button onclick="getSHA512Sum()">SHA512</button></td></tr>
+    </tbody></table></div>
+
     <div style="display: none;" onclick="window.quitAll()" id="quitAll"><i style="display: none;" id="toast">cant reach server</i></div>
     <textarea style="display: none;" id="text-editor"></textarea>
     <div id="drop-grid"></div>

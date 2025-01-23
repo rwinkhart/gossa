@@ -3,11 +3,17 @@ package main
 import (
 	"archive/zip"
 	"compress/gzip"
+	"crypto/md5"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
 	_ "embed"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
+	"hash"
 	"html"
 	"html/template"
 	"io"
@@ -231,12 +237,31 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 	check(err)
 	json.Unmarshal(bodyBytes, &rpc)
 
-	if rpc.Call == "mkdirp" {
+	switch rpc.Call {
+	case "mkdirp":
 		err = os.MkdirAll(enforcePath(rpc.Args[0]), os.ModePerm)
-	} else if rpc.Call == "mv" {
+	case "mv":
 		err = os.Rename(enforcePath(rpc.Args[0]), enforcePath(rpc.Args[1]))
-	} else if rpc.Call == "rm" {
+	case "rm":
 		err = os.RemoveAll(enforcePath(rpc.Args[0]))
+	case "sum":
+		var file *os.File
+		file, err = os.Open(enforcePath(rpc.Args[0]))
+		var hash hash.Hash
+		switch rpc.Args[1] {
+		case "md5":
+			hash = md5.New()
+		case "sha1":
+			hash = sha1.New()
+		case "sha256":
+			hash = sha256.New()
+		case "sha512":
+			hash = sha512.New()
+		}
+		_, err = io.Copy(hash, file)
+		checksum := hash.Sum(nil)
+		checksumHex := hex.EncodeToString(checksum)
+		fmt.Println(checksumHex)
 	}
 
 	check(err)

@@ -22,6 +22,7 @@ const videoHolder = document.getElementById('videoHolder')
 const manualUpload = document.getElementById('clickupload')
 const pdf = document.getElementById('pdf')
 const help = document.getElementById('help')
+const sums = document.getElementById('sums')
 const okBadge = document.getElementById('ok')
 const sadBadge = document.getElementById('sad')
 const pageTitle = document.head.querySelector('title')
@@ -160,6 +161,7 @@ function rpc (call, args, cb) {
 const mkdirCall = (path, cb) => rpc('mkdirp', [prependPath(path)], cb)
 const rmCall = (path1, cb) => rpc('rm', [prependPath(path1)], cb)
 const mvCall = (path1, path2, cb) => rpc('mv', [path1, path2], cb)
+const sumCall = (path, type) => rpc('sum', [prependPath(path), type])
 
 // File upload
 let totalDone = 0
@@ -641,6 +643,29 @@ function pdfOff () {
   return true
 }
 
+// sums
+const isSumsMode = () => sums.style.display === 'block'
+
+const sumsToggle = () => isSumsMode() ? sumsOff() : sumsOn()
+
+function sumsOn () {
+  sums.style.display = 'block'
+  table.style.display = 'none'
+}
+
+window.sumsOff = sumsOff
+function sumsOff () {
+  if (!isSumsMode()) return
+  sums.style.display = 'none'
+  table.style.display = 'table'
+  return true
+}
+
+function getSum (type) {
+    const a = getASelected()
+    sumCall(a.innerText, type)
+}
+
 // help
 const isHelpMode = () => help.style.display === 'block'
 
@@ -779,6 +804,19 @@ document.body.addEventListener('keydown', e => {
 
         case 'KeyU':
           return prevent(e) || isRo() || manualUpload.click()
+
+        case 'Digit1':
+          return prevent(e) || isRo() || getSum('sha1')
+
+        case 'Digit2':
+          return prevent(e) || isRo() || getSum('sha256')
+
+        case 'Digit3':
+          return prevent(e) || isRo() || getSum('sha512')
+
+        case 'Digit5':
+          //return prevent(e) || isRo() || sumsToggle()
+          return prevent(e) || isRo() || getSum('md5')
 
         case 'Enter':
         case 'ArrowRight':
