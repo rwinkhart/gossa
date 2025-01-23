@@ -259,9 +259,12 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 			hash = sha512.New()
 		}
 		_, err = io.Copy(hash, file)
+		check(err)
 		checksum := hash.Sum(nil)
-		checksumHex := hex.EncodeToString(checksum)
-		fmt.Println(checksumHex)
+		checksumHex := make([]byte, hex.EncodedLen(len(checksum)))
+		hex.Encode(checksumHex, checksum)
+		w.Write(checksumHex)
+		return
 	}
 
 	check(err)

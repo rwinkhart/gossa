@@ -154,14 +154,21 @@ function rpc (call, args, cb) {
   xhr.open('POST', location.origin + window.extraPath + '/rpc')
   xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
   xhr.send(JSON.stringify({ call, args }))
-  xhr.onload = cb
+  // set the callback function (cb) to true to display the response
+  if (cb === true) {
+    xhr.onload = () => {
+      console.log(xhr.responseText)
+    };
+  } else {
+    xhr.onload = cb
+  }
   xhr.onerror = () => flicker(sadBadge)
 }
 
 const mkdirCall = (path, cb) => rpc('mkdirp', [prependPath(path)], cb)
 const rmCall = (path1, cb) => rpc('rm', [prependPath(path1)], cb)
 const mvCall = (path1, path2, cb) => rpc('mv', [path1, path2], cb)
-const sumCall = (path, type) => rpc('sum', [prependPath(path), type])
+const sumCall = (path, type) => {rpc('sum', [prependPath(path), type], true)}
 
 // File upload
 let totalDone = 0
