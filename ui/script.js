@@ -156,7 +156,7 @@ function rpc (call, args, cb) {
   // set the callback function (cb) to true to display the response
   if (cb === true) {
     xhr.onload = () => {
-      console.log(xhr.responseText)
+      alert(xhr.responseText)
     };
   } else {
     xhr.onload = cb
