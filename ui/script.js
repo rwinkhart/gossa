@@ -673,6 +673,24 @@ function helpOff () {
   return true
 }
 
+// checksums
+const isSumsMode = () => sums.style.display === 'block'
+
+const sumsToggle = () => isSumsMode() ? sumsOff() : sumsOn()
+
+function sumsOn () {
+  sums.style.display = 'block'
+  table.style.display = 'none'
+}
+
+window.sumsOff = sumsOff
+function sumsOff () {
+  if (!isSumsMode()) return
+  sums.style.display = 'none'
+  table.style.display = 'table'
+  return true
+}
+
 // Paste handler
 const cuts = []
 function onPaste () {
@@ -773,6 +791,10 @@ document.body.addEventListener('keydown', e => {
         case 'KeyH':
           return prevent(e) || isRo() || helpToggle()
 
+        case 'KeyZ':
+          // TODO figure out why the help menu closes on ctrl but this one doesn't
+          return prevent(e) || isRo() || sumsToggle()
+
         case 'KeyX':
           return prevent(e) || isRo() || onCut()
 
@@ -794,22 +816,24 @@ document.body.addEventListener('keydown', e => {
         case 'KeyU':
           return prevent(e) || isRo() || manualUpload.click()
 
-        case 'Digit1':
-          return prevent(e) || isRo() || getSum('sha1')
-
-        case 'Digit2':
-          return prevent(e) || isRo() || getSum('sha256')
-
-        case 'Digit3':
-          return prevent(e) || isRo() || getSum('sha512')
-
-        case 'Digit5':
-          return prevent(e) || isRo() || getSum('md5')
-
         case 'Enter':
         case 'ArrowRight':
           return prevent(e) || dl(getASelected())
       }
+    } else if (isSumsMode()) {
+        switch (e.code) {
+          case 'Digit1':
+            return prevent(e) || isRo() || getSum('sha1')
+
+          case 'Digit2':
+            return prevent(e) || isRo() || getSum('sha256')
+
+          case 'Digit3':
+            return prevent(e) || isRo() || getSum('sha512')
+
+          case 'Digit5':
+            return prevent(e) || isRo() || getSum('md5')
+        }
     }
   } else {
       // Workaround Firefox requirement for transient activation
