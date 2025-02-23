@@ -391,7 +391,7 @@ function resetView () {
   scrollToArrow()
 }
 
-window.quitAll = () => helpOff() || picsOff() || videosOff() || padOff() || pdfOff()
+window.quitAll = () => helpOff() || sumsOff() || picsOff() || videosOff() || padOff() || pdfOff()
 
 // Mkdir icon
 window.mkdirBtn = function () {
@@ -750,7 +750,7 @@ document.body.addEventListener('keydown', e => {
     return resetBackgroundLinks() || window.quitAll()
   }
 
-  if (isHelpMode()) { return prevent(e) || window.quitAll() }
+  if (isHelpMode() || isSumsMode()) { return prevent(e) || window.quitAll() }
 
   if (isEditorMode()) { return }
 
