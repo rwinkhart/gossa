@@ -274,7 +274,7 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		checksum := hash.Sum(nil)
 		checksumHex := make([]byte, hex.EncodedLen(len(checksum)))
 		hex.Encode(checksumHex, checksum)
-		w.Write(append([]byte(rpc.Args[1]+"sum:\n"), checksumHex...))
+		w.Write(checksumHex)
 		return
 	}
 

@@ -153,10 +153,11 @@ function rpc (call, args, cb) {
   xhr.open('POST', location.origin + window.extraPath + '/rpc')
   xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
   xhr.send(JSON.stringify({ call, args }))
-  // set the callback function (cb) to true to display the response
+  // set the callback function (cb) to true to copy the response (checksum) to the clipboard
   if (cb === true) {
     xhr.onload = () => {
-      alert(xhr.responseText)
+      navigator.clipboard.writeText(xhr.responseText)
+      alert(args[1] + ' sum of ' + args[0] + ' copied to clipboard')
     };
   } else {
     xhr.onload = cb
@@ -823,6 +824,7 @@ document.body.addEventListener('keydown', e => {
     } else if (isSumsMode()) {
         switch (e.code) {
           case 'Digit1':
+            sumsToggle()
             return prevent(e) || isRo() || getSum('sha1')
 
           case 'Digit2':
