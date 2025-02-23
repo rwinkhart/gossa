@@ -156,9 +156,7 @@ function rpc (call, args, cb) {
   // set the callback function (cb) to true to copy the response to the clipboard
   if (cb === true) {
     xhr.onload = () => {
-      if (!xhr.responseText.startsWith("error: ")) {
-        navigator.clipboard.writeText(xhr.responseText)
-      }
+      navigator.clipboard.writeText(xhr.responseText)
     };
   } else {
     xhr.onload = cb
