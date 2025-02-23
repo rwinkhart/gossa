@@ -153,11 +153,14 @@ function rpc (call, args, cb) {
   xhr.open('POST', location.origin + window.extraPath + '/rpc')
   xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
   xhr.send(JSON.stringify({ call, args }))
-  // set the callback function (cb) to true to copy the response (checksum) to the clipboard
+  // set the callback function (cb) to true to copy the response to the clipboard
   if (cb === true) {
     xhr.onload = () => {
-      navigator.clipboard.writeText(xhr.responseText)
-      alert(args[1] + ' sum of ' + args[0] + ' copied to clipboard')
+      if (!xhr.responseText.startsWith("error: ")) {
+        navigator.clipboard.writeText(xhr.responseText)
+      } else {
+        alert(xhr.responseText)
+      }
     };
   } else {
     xhr.onload = cb
