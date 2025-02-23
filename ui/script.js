@@ -653,13 +653,6 @@ function pdfOff () {
   return true
 }
 
-// sums
-function getSum (type) {
-    const a = getASelected()
-    sumCall(a.innerText, type)
-    sumsToggle()
-}
-
 // help
 const isHelpMode = () => help.style.display === 'block'
 
@@ -679,6 +672,12 @@ function helpOff () {
 }
 
 // checksums
+function getSum (type) {
+    const a = getASelected()
+    sumCall(a.innerText, type)
+    sumsToggle()
+}
+
 const isSumsMode = () => sums.style.display === 'block'
 
 const sumsToggle = () => isSumsMode() ? sumsOff() : sumsOn()
