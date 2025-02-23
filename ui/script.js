@@ -158,8 +158,6 @@ function rpc (call, args, cb) {
     xhr.onload = () => {
       if (!xhr.responseText.startsWith("error: ")) {
         navigator.clipboard.writeText(xhr.responseText)
-      } else {
-        alert(xhr.responseText)
       }
     };
   } else {
@@ -675,7 +673,7 @@ function helpOff () {
 function getSum (type) {
     const a = getASelected()
     sumCall(a.innerText, type)
-    sumsToggle()
+    sumsOff()
 }
 
 const isSumsMode = () => sums.style.display === 'block'
@@ -683,6 +681,10 @@ const isSumsMode = () => sums.style.display === 'block'
 const sumsToggle = () => isSumsMode() ? sumsOff() : sumsOn()
 
 function sumsOn () {
+  if (getASelected().innerText.endsWith('/')) {
+    alert('cannot checksum a directory')
+    return
+  }
   sums.style.display = 'block'
   table.style.display = 'none'
 }
@@ -796,7 +798,6 @@ document.body.addEventListener('keydown', e => {
           return prevent(e) || isRo() || helpToggle()
 
         case 'KeyZ':
-          // TODO figure out why the help menu closes on ctrl but this one doesn't
           return prevent(e) || isRo() || sumsToggle()
 
         case 'KeyX':

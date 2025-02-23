@@ -246,17 +246,7 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 		err = os.RemoveAll(enforcePath(rpc.Args[0]))
 	case "sum":
 		var file *os.File
-		if strings.HasSuffix(rpc.Args[0], "/../") {
-			w.Write([]byte("error: cannot checksum a directory"))
-			return
-		}
 		enforcedPath := enforcePath(rpc.Args[0])
-		fileInfo, err := os.Lstat(enforcedPath)
-		check(err)
-		if fileInfo.IsDir() {
-			w.Write([]byte("error: cannot checksum a directory"))
-			return
-		}
 		file, err = os.Open(enforcedPath)
 		var hash hash.Hash
 		switch rpc.Args[1] {
