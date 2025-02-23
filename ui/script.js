@@ -657,6 +657,7 @@ function pdfOff () {
 function getSum (type) {
     const a = getASelected()
     sumCall(a.innerText, type)
+    sumsToggle()
 }
 
 // help
@@ -827,7 +828,6 @@ document.body.addEventListener('keydown', e => {
     } else if (isSumsMode()) {
         switch (e.code) {
           case 'Digit1':
-            sumsToggle()
             return prevent(e) || isRo() || getSum('sha1')
 
           case 'Digit2':
