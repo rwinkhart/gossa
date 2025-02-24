@@ -153,21 +153,13 @@ function rpc (call, args, cb) {
   xhr.open('POST', location.origin + window.extraPath + '/rpc')
   xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
   xhr.send(JSON.stringify({ call, args }))
-  // set the callback function (cb) to true to copy the response to the clipboard
-  if (cb === true) {
-    xhr.onload = () => {
-      navigator.clipboard.writeText(xhr.responseText)
-    };
-  } else {
-    xhr.onload = cb
-  }
+  xhr.onload = cb
   xhr.onerror = () => flicker(sadBadge)
 }
 
 const mkdirCall = (path, cb) => rpc('mkdirp', [prependPath(path)], cb)
 const rmCall = (path1, cb) => rpc('rm', [prependPath(path1)], cb)
 const mvCall = (path1, path2, cb) => rpc('mv', [path1, path2], cb)
-const sumCall = (path, type) => {rpc('sum', [prependPath(path), type], true)}
 
 // File upload
 let totalDone = 0
@@ -391,7 +383,7 @@ function resetView () {
   scrollToArrow()
 }
 
-window.quitAll = () => helpOff() || sumsOff() || picsOff() || videosOff() || padOff() || pdfOff()
+window.quitAll = () => helpOff() || picsOff() || videosOff() || padOff() || pdfOff()
 
 // Mkdir icon
 window.mkdirBtn = function () {
@@ -667,34 +659,6 @@ function helpOff () {
   return true
 }
 
-// checksums
-function getSum (type) {
-    const a = getASelected()
-    sumCall(a.innerText, type)
-    sumsOff()
-}
-
-const isSumsMode = () => sums.style.display === 'block'
-
-const sumsToggle = () => isSumsMode() ? sumsOff() : sumsOn()
-
-function sumsOn () {
-  if (getASelected().innerText.endsWith('/')) {
-    alert('cannot checksum a directory')
-    return
-  }
-  sums.style.display = 'block'
-  table.style.display = 'none'
-}
-
-window.sumsOff = sumsOff
-function sumsOff () {
-  if (!isSumsMode()) return
-  sums.style.display = 'none'
-  table.style.display = 'table'
-  return true
-}
-
 // Paste handler
 const cuts = []
 function onPaste () {
@@ -750,7 +714,7 @@ document.body.addEventListener('keydown', e => {
     return resetBackgroundLinks() || window.quitAll()
   }
 
-  if (isHelpMode() || isSumsMode()) { return prevent(e) || window.quitAll() }
+  if (isHelpMode()) { return prevent(e) || window.quitAll() }
 
   if (isEditorMode()) { return }
 
@@ -795,9 +759,6 @@ document.body.addEventListener('keydown', e => {
         case 'KeyH':
           return prevent(e) || isRo() || helpToggle()
 
-        case 'KeyZ':
-          return prevent(e) || isRo() || sumsToggle()
-
         case 'KeyX':
           return prevent(e) || isRo() || onCut()
 
@@ -823,20 +784,6 @@ document.body.addEventListener('keydown', e => {
         case 'ArrowRight':
           return prevent(e) || dl(getASelected())
       }
-    } else if (isSumsMode()) {
-        switch (e.code) {
-          case 'Digit1':
-            return prevent(e) || isRo() || getSum('sha1')
-
-          case 'Digit2':
-            return prevent(e) || isRo() || getSum('sha256')
-
-          case 'Digit3':
-            return prevent(e) || isRo() || getSum('sha512')
-
-          case 'Digit5':
-            return prevent(e) || isRo() || getSum('md5')
-        }
     }
   } else {
       // Workaround Firefox requirement for transient activation
