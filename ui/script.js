@@ -669,9 +669,8 @@ function helpOff () {
 
 // checksums
 function getSum (type) {
-    const a = getASelected()
-    sumCall(a.innerText, type)
-    sumsOff()
+  sumCall(getASelected().innerText, type)
+  sumsOff()
 }
 
 const isSumsMode = () => sums.style.display === 'block'
@@ -750,7 +749,7 @@ document.body.addEventListener('keydown', e => {
     return resetBackgroundLinks() || window.quitAll()
   }
 
-  if (isHelpMode() || isSumsMode()) { return prevent(e) || window.quitAll() }
+  if (isHelpMode()) { return prevent(e) || window.quitAll() }
 
   if (isEditorMode()) { return }
 
